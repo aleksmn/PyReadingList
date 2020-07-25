@@ -54,9 +54,9 @@ def update(id, title, author, year, date):
 
 
 connect()
+
 # insert('Снеговик', 'Ю Несбе', 2011, '2020-06-11')
 # delete(2)
-
-update(3, 'Тараканы', 'Ю Несбе', 2011, '2020-06-11')
-print(view())
-# print(search(author="Ю Несбе"))
+#update(3, 'Тараканы', 'Ю Несбе', 2011, '2020-06-11')
+#print(view())
+#print(search(author="Ю Несбе"))
