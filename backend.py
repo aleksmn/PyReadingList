@@ -5,55 +5,46 @@ import sqlite3
 # dates and times as TEXT, REAL, or INTEGER values:
 # TEXT as ISO8601 strings ("YYYY-MM-DD HH:MM:SS.SSS"). 
 
-def connect():
-    conn = sqlite3.connect("books.db")
-    cur = conn.cursor()
-    cur.execute("CREATE TABLE IF NOT EXISTS book (id INTEGER PRIMARY KEY, title TEXT, author TEXT, year INTEGER, date TEXT)")
-    conn.commit()
-    conn.close()
+class Database:
+
+    def __init__(self, db):
+        self.conn = sqlite3.connect(db)
+        self.cur = self.conn.cursor()
+        self.cur.execute("CREATE TABLE IF NOT EXISTS book (id INTEGER PRIMARY KEY, title TEXT, author TEXT, year INTEGER, date TEXT)")
+        self.conn.commit()
 
 
-def insert(title, author, year, date):
-    conn = sqlite3.connect("books.db")
-    cur = conn.cursor()
-    cur.execute("INSERT INTO book VALUES (NULL,?,?,?,?)", (title, author, year, date))
-    conn.commit()
-    conn.close()  
+    def insert(self, title, author, year, date):
+        self.cur.execute("INSERT INTO book VALUES (NULL,?,?,?,?)", (title, author, year, date))
+        self.conn.commit()
+  
 
-def view():
-    conn = sqlite3.connect("books.db")
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM book")
-    rows = cur.fetchall()
-    conn.close()
-    return rows
-
-def search(title="", author="", year="", date=""):
-    conn = sqlite3.connect("books.db")
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM book WHERE title=? OR author=? OR year=? OR date=?", (title, author, year, date))
-    rows = cur.fetchall()
-    conn.close()
-    return rows
-
-def delete(id):
-    conn = sqlite3.connect("books.db")
-    cur = conn.cursor()
-    cur.execute("DELETE FROM book WHERE id=?", (id,))
-    conn.commit()
-    conn.close()
+    def view(self):
+        self.cur.execute("SELECT * FROM book")
+        rows = self.cur.fetchall()
+        return rows
 
 
-def update(id, title, author, year, date):
-    conn = sqlite3.connect("books.db")
-    cur = conn.cursor()
-    cur.execute("UPDATE book SET title=?, author=?, year=?, date=? WHERE id=?", (title, author, year, date, id))
-    conn.commit()
-    conn.close()  
+    def search(self, title="", author="", year="", date=""):
+        self.cur.execute("SELECT * FROM book WHERE title=? OR author=? OR year=? OR date=?", (title, author, year, date))
+        rows = self.cur.fetchall()
+        return rows
 
 
+    def delete(self, id):
+        self.cur.execute("DELETE FROM book WHERE id=?", (id,))
+        self.conn.commit()
 
-connect()
+
+    def update(self, id, title, author, year, date):
+        self.cur.execute("UPDATE book SET title=?, author=?, year=?, date=? WHERE id=?", (title, author, year, date, id))
+        self.conn.commit()
+
+
+    def __del__(self):
+        self.conn.close()
+
+
 
 # insert('Снеговик', 'Ю Несбе', 2011, '2020-06-11')
 # delete(2)
